@@ -1,26 +1,31 @@
 $(document).ready(function () {
     var $mainMenuItems = $('#main-menu ul').children('li'),
         totalMainMenuItems = $mainMenuItems.length,
-        opendIndex = -1,
+        openedIndex = 2,
 
         init = function () {
-        bindEvents();
+            bindEvents();
+            if (validIndex(openedIndex)) {
+                animateItem($mainMenuItems.eq(2), true, 700);
+            }
         },
-        bindEvents=function(){
+        bindEvents = function () {
             $mainMenuItems.children('.images').click(function () {
-                var newIndex = $(this).parent().index(),
-                    $item = $mainMenuItems.eq(newIndex);
-                if (opendIndex === newIndex) {
-                    animateItem($item, false, 250);
-                    opendIndex = -1;
-                } else {
-                    if (validIndex(newIndex)){
-                        animateItem($mainMenuItems.eq(opendIndex), false, 250);
-                        opendIndex = newIndex;
-                        animateItem($item, true, 250);
+                var newIndex = $(this).parent().index();
+                checkAndAnimateItem(newIndex)
 
-                    }
-                }
+            });
+            $('.button').hover(
+                function () {
+                    $(this).addClass('hovered');
+
+                }, function () {
+                    $(this).removeClass('hovered');
+
+                });
+            $('.button').click(function () {
+                var newIndex = $(this).index();
+                checkAndAnimateItem(newIndex)
             });
         },
         validIndex = function (indexToCheck) {
@@ -33,8 +38,20 @@ $(document).ready(function () {
             $colorImage.animate(colorImageParam, speed);
             $item.animate(itemParam, speed);
 
-        }
-    ;
-    init();
+        },
+        checkAndAnimateItem = function (indexToCkeckAndAnimate) {
+            if (openedIndex === indexToCkeckAndAnimate) {
+                animateItem($mainMenuItems.eq(indexToCkeckAndAnimate), false, 250);
+                openedIndex = -1;
+            } else {
+                if (validIndex(indexToCkeckAndAnimate)) {
+                    animateItem($mainMenuItems.eq(openedIndex), false, 250);
+                    openedIndex = indexToCkeckAndAnimate;
+                    animateItem($mainMenuItems.eq(openedIndex), true, 250);
 
+                }
+            }
+
+        };
+    init();
 });
